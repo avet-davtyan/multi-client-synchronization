@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "./dist",     
+    "esModuleInterop": true,       
+    "skipLibCheck": true,          
+    "strict": true,
+    "paths": {
+      "@multi-client-sync/shared": ["../shared/src"]
+    }         
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/manifest.json"
+  ]
+}

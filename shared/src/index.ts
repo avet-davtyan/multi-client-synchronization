@@ -1,7 +1,2 @@
-export interface IMultiClientClickEvent {
-  eventString: string;
-}
-
-export function sayHello() {
-  console.log("Hello from shared");
-}
+export * from "./event-type";
+export * from "./mouse-click-event";

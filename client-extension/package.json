@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "build": "node esbuild.config.js"
+    "build": "node esbuild.config.js",
+    "postbuild": "cp manifest.json dist/"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.287",
@@ -15,6 +16,7 @@
     "vite": "^6.0.1"
   },
   "dependencies": {
-    "@multi-client-sync/shared": "workspace:^"
+    "@multi-client-sync/shared": "workspace:^",
+    "zod": "^3.24.1"
   }
 }

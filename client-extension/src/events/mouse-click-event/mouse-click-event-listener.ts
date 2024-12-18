@@ -6,10 +6,9 @@ const ElementWithOuterHtmlSchema = z.object({
 })
 
 export async function mouseClickEventListener(event: MouseEvent) {
-
   const mouseClickEvent = await generateMouseClickEvent(event);
 
-  //NOTE: send this mouseClickEvent to socketServer
+  console.log(mouseClickEvent);
 }
 
 async function generateMouseClickEvent(

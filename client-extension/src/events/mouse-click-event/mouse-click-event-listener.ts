@@ -1,4 +1,8 @@
-import { EventType, MouseClickEventDTO } from "@multi-client-sync/shared";
+import {
+  EventType,
+  MouseClickEventDataSchema,
+  MouseClickEventSchema,
+} from "@multi-client-sync/shared";
 import { z } from "zod";
 
 const ElementWithOuterHtmlSchema = z.object({
@@ -13,18 +17,22 @@ export async function mouseClickEventListener(event: MouseEvent) {
 
 async function generateMouseClickEvent(
   event: MouseEvent,
-): Promise<MouseClickEventDTO> {
+): Promise<MouseClickEventSchema> {
 
   let outerHTML: null | string = null;
   if(event.target !== null) {
     outerHTML = await getOuterHTMLFromEventTarget(event.target)
   }
 
-  const mouseClickEvent: MouseClickEventDTO = {
-    eventType: EventType.MOUSE_CLICK,
+  const mouseClickEventData: MouseClickEventDataSchema = {
     targetOuterHTML: outerHTML,
     mousePositionX: event.clientX,
     mousePositionY: event.clientY,
+  }
+
+  const mouseClickEvent: MouseClickEventSchema = {
+    eventType: EventType.MOUSE_CLICK,
+    eventData: mouseClickEventData,
   }
 
   return mouseClickEvent;

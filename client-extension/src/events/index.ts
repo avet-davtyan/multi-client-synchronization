@@ -6,4 +6,4 @@ export type PipelineMouseClick = [DocumentEventType.CLICK, ListenerPipeline<Mous
 
 export const mouseClickEventPipeLinelist: PipelineMouseClick[] = [
   [DocumentEventType.CLICK, mouseClickEventListenerPipeline],
-]
+];

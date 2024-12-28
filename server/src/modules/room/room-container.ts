@@ -1,4 +1,5 @@
 import { IRoom } from "./room.interface";
+import { WebSocket } from "ws";
 
 export class RoomContainer {
 
@@ -16,11 +17,34 @@ export class RoomContainer {
     return RoomContainer.instance;
   }
 
-  async addRoom(room: IRoom) {
+  async createRoom(room: IRoom) {
 
     if(this.roomExists(room.roomId)) { return; }
 
     this._rooms.push(room);
+  }
+
+  async getRoomById(
+    roomId: string,
+  ): Promise<IRoom | null> {
+
+    const room = this._rooms.find((_room) => _room.roomId === roomId);
+    if(room === undefined) { return null; }
+
+    return room;
+  }
+
+  async addParticipantToRoom(
+    socket: WebSocket,
+    roomId: string,
+  ) {
+    const room = await this.getRoomById(roomId);
+    if(room === null) { return; }
+
+    const participant = room.participants.find((_socket) => _socket === socket);
+    if(participant !== undefined) { return; }
+
+    room.participants.push(socket);
   }
 
   private roomExists(

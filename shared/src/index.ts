@@ -1,5 +1,8 @@
 import {z} from "zod";
-import { CreateRoomEventSchema } from "./room";
+import {
+  CreateRoomEventSchema,
+  JoinRoomEventSchema,
+} from "./room";
 import { MouseClickEventSchema } from "./mouse";
 
 export * from "./event-type";
@@ -8,6 +11,7 @@ export * from "./room";
 
 export const EventUnionSchema = z.union([
   CreateRoomEventSchema,
+  JoinRoomEventSchema,
   MouseClickEventSchema,
 ]);
 

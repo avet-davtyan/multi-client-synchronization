@@ -42,8 +42,8 @@ export class SocketManager {
     socket.on("message", async (message: string) => {
       const event = JSON.parse(message);
       const eventUnion = await EventUnionSchema.parseAsync(event);
-
-      this._eventHandler.handleEvent(eventUnion);
+      if(eventUnion === null) { return; }
+      this._eventHandler.handleEvent(socket, eventUnion);
     })
   }
 

@@ -60,7 +60,39 @@ export class RoomService {
 
     if(room === null) { return; }
 
-    this._roomContainer.addRoom(room);
+    this._roomContainer.createRoom(room);
 
+  }
+
+  async joinToRoom(
+    socket: WebSocket,
+    roomId: string,
+    roomPassword?: string,
+  ) {
+
+    let hasAccessToJoinToRoom = true;
+    const room = await this._roomContainer.getRoomById(roomId);
+    if(room === null) { return; }
+
+    if(room.roomVisibility === RoomVisibilityType.PRIVATE) {
+      if(this.passwordsMatch(roomPassword, room.password) === false) {
+        hasAccessToJoinToRoom = false;
+      }
+    }
+
+    if(hasAccessToJoinToRoom === false) {
+      return;
+    }
+
+    this._roomContainer.addParticipantToRoom(socket, roomId);
+
+  }
+
+  private passwordsMatch(
+    passwordInput: string | undefined,
+    passwordExisting: string,
+  ): boolean {
+    if(passwordInput === passwordExisting) { return true; }
+    return false;
   }
 }

@@ -26,7 +26,7 @@ export class MouseClickService {
     return MouseClickService.instance;
   }
 
-  async sendMouseClickEvent(
+  async generateMouseClickEvent(
     event: MouseEvent,
   ) {
 

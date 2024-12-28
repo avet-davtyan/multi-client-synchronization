@@ -1,6 +1,13 @@
+import { SocketService } from "../../modules";
 import { MouseClickService } from "../../modules/mouse";
 
-export function mouseClickEvnetListener(event: MouseEvent) {
+export async function mouseClickEvnetListener(event: MouseEvent) {
   const mouseService = MouseClickService.getInstance();
-  mouseService.sendMouseClickEvent(event);
+  const socketService = SocketService.getInstance();
+
+  const mouseClickEvent = await mouseService.generateMouseClickEvent(event);
+
+  console.log(mouseClickEvent);
+
+  socketService.sendEvent(mouseClickEvent);
 }

@@ -1,12 +1,26 @@
 import { eventListenerPairs } from "./listeners";
-const socket = new WebSocket("ws://localhost:6062");
+import { SocketService } from "./modules";
 
-for(const eventListenerPair of eventListenerPairs) {
+function main(){
 
-  const [
-    documentEventType,
-    listener,
-  ] = eventListenerPair;
+  const socketService = SocketService.getInstance();
 
-  document.addEventListener(documentEventType, listener);
+  for(const eventListenerPair of eventListenerPairs) {
+    const [
+      documentEventType,
+      listener,
+    ] = eventListenerPair;
+    document.addEventListener(documentEventType, listener);
+  }
+
+  socketService.webSocket.addEventListener("message", (event) => {
+
+    console.log("recieved message");
+    const recievedData = JSON.parse(event.data);
+
+    console.log({recievedData});
+  })
+
 }
+
+main();

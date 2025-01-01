@@ -1,19 +1,18 @@
 import { RoomVisibilityType } from "@multi-client-sync/shared";
-import { WebSocket } from "ws";
 
 interface IPrivateRoom {
   roomVisibility: RoomVisibilityType.PRIVATE;
   roomId: string;
-  admin: WebSocket;
+  adminSocketId: string;
   password: string;
-  participants: WebSocket[];
+  participantSocketIdList: string[];
 }
 
 interface IPublicRoom {
   roomVisibility: RoomVisibilityType.PUBLIC;
   roomId: string;
-  admin: WebSocket;
-  participants: WebSocket[];
+  adminSocketId: string;
+  participantSocketIdList: string[];
 }
 
 export type IRoom = IPrivateRoom | IPublicRoom;

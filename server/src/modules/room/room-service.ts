@@ -5,7 +5,6 @@ import {
 import { RoomContainer } from "./room-container";
 import { IRoom } from "./room.interface";
 import { randomUUID } from "crypto";
-import { WebSocket } from "ws";
 
 export class RoomService {
 
@@ -24,7 +23,7 @@ export class RoomService {
   }
 
   async createRoom(
-    socket: WebSocket,
+    socketId: string,
     createRoomEvent: CreateRoomEventSchema,
   ) {
 
@@ -41,8 +40,8 @@ export class RoomService {
       const privateRoom: IRoom = {
         roomVisibility: roomVisibilityType,
         roomId: randomUUID(),
-        admin: socket,
-        participants: [],
+        adminSocketId: socketId,
+        participantSocketIdList: [],
         password: eventData.roomPassword,
       }
 
@@ -52,8 +51,8 @@ export class RoomService {
       const publicRoom: IRoom = {
         roomVisibility: roomVisibilityType,
         roomId: randomUUID(),
-        admin: socket,
-        participants: [],
+        adminSocketId: socketId,
+        participantSocketIdList: [],
       }
       room = publicRoom;
     }
@@ -65,27 +64,43 @@ export class RoomService {
   }
 
   async joinToRoom(
-    socket: WebSocket,
+    socketId: string,
     roomId: string,
     roomPassword?: string,
   ) {
+    const hasAccessToJoinRoom = await this.hasAccessToJoinRoom(socketId, roomId, roomPassword);
+    if(hasAccessToJoinRoom === false) { return; }
 
-    let hasAccessToJoinToRoom = true;
+    console.log("joining room");
+
+    this._roomContainer.addParticipantToRoom(socketId, roomId);
+  }
+
+  async getRoomBySocketId(
+    socketId: string,
+  ): Promise<IRoom | null> {
+    const room = await this._roomContainer.getRoomBySocketId(socketId);
+
+    return room;
+  }
+
+  private async hasAccessToJoinRoom(
+    socketId: string,
+    roomId: string,
+    roomPassword?: string,
+  ): Promise<boolean> {
+    let hasAccessToJoinRoom = true;
+
     const room = await this._roomContainer.getRoomById(roomId);
-    if(room === null) { return; }
+    if(room === null) { return false; }
 
     if(room.roomVisibility === RoomVisibilityType.PRIVATE) {
       if(this.passwordsMatch(roomPassword, room.password) === false) {
-        hasAccessToJoinToRoom = false;
+        hasAccessToJoinRoom = false;
       }
     }
 
-    if(hasAccessToJoinToRoom === false) {
-      return;
-    }
-
-    this._roomContainer.addParticipantToRoom(socket, roomId);
-
+    return hasAccessToJoinRoom;
   }
 
   private passwordsMatch(

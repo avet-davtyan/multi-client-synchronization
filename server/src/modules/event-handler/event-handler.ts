@@ -5,16 +5,18 @@ import {
   MouseClickEventSchema,
   JoinRoomEventSchema,
 } from "@multi-client-sync/shared";
-import { RoomService } from "../room/room-service";
-import { WebSocket } from "ws";
+import { RoomService } from "../room";
+import { MouseService } from "../mouse/mouse-service";
 
 export class EventHandler {
 
   public static instance: EventHandler;
-  private _roomSerive: RoomService;
+  private _roomService: RoomService;
+  private _mouseService: MouseService;
 
   public constructor() {
-    this._roomSerive = RoomService.getInstance();
+    this._roomService = RoomService.getInstance();
+    this._mouseService = MouseService.getInstance();
   }
 
   public static getInstance(): EventHandler {
@@ -25,45 +27,47 @@ export class EventHandler {
   }
 
   async handleEvent(
-    socket: WebSocket,
+    socketId: string,
     event: EventUnionSchema,
   ) {
 
     if(event.eventType === EventType.MOUSE_CLICK) {
-      this.handeMouseClickEvent(socket, event);
+      this.handeMouseClickEvent(socketId, event);
     }
     else if(event.eventType === EventType.CREATE_ROOM) {
-      this.handleCreateRoomEvent(socket, event);
+      this.handleCreateRoomEvent(socketId, event);
     }
     else if(event.eventType === EventType.JOIN_ROOM) {
-      this.handleJoinRoomEvent(socket, event);
+      this.handleJoinRoomEvent(socketId, event);
     }
   }
 
   private async handeMouseClickEvent(
-    socket: WebSocket,
+    socketId: string,
     mouseClickEvent: MouseClickEventSchema,
   ) {
-    console.log("mouse click", mouseClickEvent);
+    console.log("handleJoinRoomEvent");
+
+    this._mouseService.sendMouseClickEventToRoom(socketId, mouseClickEvent);
   }
 
   private async handleCreateRoomEvent(
-    socket: WebSocket,
+    socketId: string,
     createRoomEvent: CreateRoomEventSchema,
   ) {
-    this._roomSerive.createRoom(socket, createRoomEvent);
+    this._roomService.createRoom(socketId, createRoomEvent);
   }
 
   private async handleJoinRoomEvent(
-    socket: WebSocket,
+    socketId: string,
     joinRoomEvent: JoinRoomEventSchema,
   ) {
     const {
       eventData,
     } = joinRoomEvent;
 
-    this._roomSerive.joinToRoom(
-      socket,
+    this._roomService.joinToRoom(
+      socketId,
       eventData.roomId,
       eventData.roomPassword,
     );

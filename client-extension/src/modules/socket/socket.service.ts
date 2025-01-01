@@ -3,10 +3,10 @@ import { EventUnionSchema } from "@multi-client-sync/shared";
 export class SocketService {
 
   private static instance: SocketService;
-  private webSocket: WebSocket;
+  private _webSocket: WebSocket;
 
   public constructor() {
-    this.webSocket = new WebSocket("ws://localhost:6062");
+    this._webSocket = new WebSocket("ws://localhost:6062");
   }
 
   public static getInstance(): SocketService {
@@ -18,7 +18,11 @@ export class SocketService {
 
   public sendEvent(event: EventUnionSchema) {
     const eventString = JSON.stringify(event);
-    this.webSocket.send(eventString);
+    this._webSocket.send(eventString);
+  }
+
+  get webSocket(){
+    return this._webSocket;
   }
 
 }

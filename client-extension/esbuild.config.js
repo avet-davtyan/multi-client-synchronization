@@ -2,12 +2,12 @@ import esbuild from "esbuild";
 
 esbuild
   .build({
-    entryPoints: ["src/content.ts"], // Entry point of your project
-    bundle: true,                  // Bundles all dependencies
-    platform: "node",              // Target Node.js environment
-    target: "node16",              // Specify Node.js version
-    outfile: "dist/content.js",      // Output file
-    sourcemap: true,               // Generate sourcemaps
+    entryPoints: ["src/content.ts", "popup.ts"],
+    bundle: true,
+    platform: "node",
+    target: "node16",
+    sourcemap: true,
+    outdir: "dist/"
   })
   .then(() => {
     console.log("Build completed!");

@@ -1,12 +1,13 @@
 import {
-  MouseClickEventListenerPair,
   mouseClickEventListenerPair,
 } from "./mouse";
+import {
+  createRoomButtonClickEventListenerPair,
+} from "./room";
 
 export * from "./mouse";
 
-type EventListenerPairUnion = MouseClickEventListenerPair;
-
-export const eventListenerPairs: EventListenerPairUnion[] = [
+export const eventListenerPairs = [
   mouseClickEventListenerPair,
+  createRoomButtonClickEventListenerPair,
 ];

@@ -1,16 +1,28 @@
-import { eventListenerPairs } from "./listeners";
-import { SocketService } from "./modules";
+import {
+  eventListenerPairs,
+  MouseClickEventListenerPair,
+} from "./listeners";
+import {
+  CreateRoomButtonClickEventListenerPair,
+} from "./listeners/room";
+import {
+  SocketService,
+} from "./modules";
 
 function main(){
 
   const socketService = SocketService.getInstance();
 
-  for(const eventListenerPair of eventListenerPairs) {
-    const [
+  for(const eventListenerPair of eventListenerPairs as (CreateRoomButtonClickEventListenerPair | MouseClickEventListenerPair)[]) {
+    const {
+      htmlElement,
       documentEventType,
       listener,
-    ] = eventListenerPair;
-    document.addEventListener(documentEventType, listener);
+    } = eventListenerPair;
+
+    // NOTE: This approach uses type assertion for adding event listeners, which bypasses type checking.
+    // This is a temporary solution, and a more type-safe approach should be explored later.
+    htmlElement.addEventListener(documentEventType, listener as EventListener);
   }
 
   socketService.webSocket.addEventListener("message", (event) => {

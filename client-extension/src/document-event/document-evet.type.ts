@@ -4,4 +4,5 @@ export enum DocumentEventType {
   KEY_DOWN = "keydown",
   SCROLL = "scroll",
   BLUR = "blur",
+  SUBMIT = "submit",
 }

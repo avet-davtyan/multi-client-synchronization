@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "node esbuild.config.js",
-    "postbuild": "cp manifest.json dist/",
+    "postbuild": "cp manifest.json popup.html dist/",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
   },
   "devDependencies": {

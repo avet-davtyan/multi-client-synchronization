@@ -11,6 +11,12 @@ import {
 
 function main(){
 
+  chrome.runtime.onMessage.addListener(
+    function() {
+      console.log("message");
+    }
+  );
+
   const socketService = SocketService.getInstance();
 
   for(const eventListenerPair of eventListenerPairs as (CreateRoomButtonClickEventListenerPair | MouseClickEventListenerPair)[]) {

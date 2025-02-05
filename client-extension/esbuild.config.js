@@ -2,12 +2,17 @@ import esbuild from "esbuild";
 
 esbuild
   .build({
-    entryPoints: ["src/content.ts", "popup.ts"],
+    entryPoints: {
+      "content": "src/content.ts",
+      "popup": "popup.ts"
+    },
     bundle: true,
-    platform: "node",
-    target: "node16",
+    platform: "browser",
+    target: "es2016",
     sourcemap: true,
-    outdir: "dist/"
+    outdir: "dist/",
+    outbase: ".",
+    entryNames: "[name]",
   })
   .then(() => {
     console.log("Build completed!");

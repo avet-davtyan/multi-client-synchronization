@@ -4,7 +4,7 @@ esbuild
   .build({
     entryPoints: {
       "content": "src/content.ts",
-      "popup": "popup.ts"
+      "popup": "src/popup.ts"
     },
     bundle: true,
     platform: "browser",

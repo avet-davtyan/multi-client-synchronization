@@ -57,7 +57,8 @@ export class SocketManager {
       const eventUnion = await EventUnionSchema.parseAsync(event);
       if(eventUnion === null) { return; }
 
-      this._eventHandler.handleEvent(socketClient.id, eventUnion);
+      const successOrError = await this._eventHandler.handleEvent(socketClient.id, eventUnion);
+      socket.send(JSON.stringify(successOrError));
 
     })
   }

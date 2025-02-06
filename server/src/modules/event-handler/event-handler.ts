@@ -7,6 +7,7 @@ import {
 } from "@multi-client-sync/shared";
 import { RoomService } from "../room";
 import { MouseService } from "../mouse/mouse-service";
+import { errorEvent, successEvent, SuccessOrError } from "../../utils/success-error";
 
 export class EventHandler {
 
@@ -29,48 +30,66 @@ export class EventHandler {
   async handleEvent(
     socketId: string,
     event: EventUnionSchema,
-  ) {
+  ): Promise<SuccessOrError> {
 
     if(event.eventType === EventType.MOUSE_CLICK) {
-      this.handeMouseClickEvent(socketId, event);
+      return this.handeMouseClickEvent(socketId, event);
     }
     else if(event.eventType === EventType.CREATE_ROOM) {
-      this.handleCreateRoomEvent(socketId, event);
+      return this.handleCreateRoomEvent(socketId, event);
     }
     else if(event.eventType === EventType.JOIN_ROOM) {
-      this.handleJoinRoomEvent(socketId, event);
+      return this.handleJoinRoomEvent(socketId, event);
     }
+
+    return errorEvent("unknown event");
   }
 
   private async handeMouseClickEvent(
     socketId: string,
     mouseClickEvent: MouseClickEventSchema,
   ) {
-    console.log("handleJoinRoomEvent");
+    try {
+      this._mouseService.sendMouseClickEventToRoom(socketId, mouseClickEvent);
+    } catch {
+      return errorEvent("can't register mouse click event");
+    }
 
-    this._mouseService.sendMouseClickEventToRoom(socketId, mouseClickEvent);
+    return successEvent("mouse click event successfully registered");
   }
 
   private async handleCreateRoomEvent(
     socketId: string,
     createRoomEvent: CreateRoomEventSchema,
-  ) {
-    this._roomService.createRoom(socketId, createRoomEvent);
+  ): Promise<SuccessOrError> {
+    try {
+      this._roomService.createRoom(socketId, createRoomEvent);
+    } catch {
+      return errorEvent("can't create room");
+    }
+
+    return successEvent("room successfully created");
   }
 
   private async handleJoinRoomEvent(
     socketId: string,
     joinRoomEvent: JoinRoomEventSchema,
   ) {
-    const {
-      eventData,
-    } = joinRoomEvent;
+    try {
+      const {
+        eventData,
+      } = joinRoomEvent;
 
-    this._roomService.joinToRoom(
-      socketId,
-      eventData.roomId,
-      eventData.roomPassword,
-    );
+      this._roomService.joinToRoom(
+        socketId,
+        eventData.roomId,
+        eventData.roomPassword,
+      );
+    } catch {
+      return errorEvent("can't create room");
+    }
+
+    return successEvent("room successfully created");
   }
 
 }

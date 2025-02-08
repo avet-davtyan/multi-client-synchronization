@@ -1,13 +1,15 @@
-import { CreateRoomEventSchema, EventType, RoomVisibilityType } from "@multi-client-sync/shared";
+import {
+  CreatePrivateRoomPopupEventSchema,
+  PopupEventType,
+} from "./popup-event";
 
 const htmlForm = document.getElementById("createRoomForm") as HTMLFormElement;
 
 console.log(htmlForm);
 
-const createRoomEvent: CreateRoomEventSchema = {
-  eventType: EventType.CREATE_ROOM,
+const createRoomEvent: CreatePrivateRoomPopupEventSchema = {
+  eventType: PopupEventType.CREATE_PRIVATE_ROOM,
   eventData: {
-    roomVisibilityType: RoomVisibilityType.PRIVATE,
     roomName: "room-name-001",
     roomPassword: "room-password-001",
   }

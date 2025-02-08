@@ -1,31 +1,15 @@
-import { EventUnionSchema } from "@multi-client-sync/shared";
 import {
   eventListenerPairs,
 } from "./listeners";
 import {
   SocketService,
+  PopupEventHandler,
 } from "./modules";
-import { EventHandler } from "./modules/popup-event-handler.ts/popup-event-handler";
 
 function main(){
 
-  const popupEventHandler = EventHandler.getInstance();
+  const popupEventHandler = PopupEventHandler.getInstance();
   const socketService = SocketService.getInstance();
-  //NOTE: move this to event handler
-  socketService.webSocket.addEventListener("message", async (event: any) => {
-
-    const recievedData = JSON.parse(event.data);
-
-    let eventUnion: undefined | EventUnionSchema = undefined;
-
-    try {
-      eventUnion = await EventUnionSchema.parseAsync(recievedData);
-    } catch {
-      console.error("can't parse event");
-    }
-
-    console.log(eventUnion);
-  })
 
   for(const eventListenerPair of eventListenerPairs) {
     const {

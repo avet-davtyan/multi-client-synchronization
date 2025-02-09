@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "jsx": "react-jsx",
     "target": "ES6",
     "module": "commonjs",
     "declaration": true,
@@ -14,6 +15,7 @@
   },
   "include": [
     "src/**/*.ts",
+    "src/**/*.tsx",
     "src/manifest.json"
   ]
 }

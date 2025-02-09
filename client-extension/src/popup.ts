@@ -1,28 +1,10 @@
-import {
-  CreatePrivateRoomPopupEventSchema,
-  PopupEventType,
-} from "./popup-event";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./popup/App";
 
-const htmlForm = document.getElementById("createRoomForm") as HTMLFormElement;
+const rootContainer = document.createElement("div");
+rootContainer.id = "my-react-extension-root";
+document.body.appendChild(rootContainer);
 
-console.log(htmlForm);
-
-const createRoomEvent: CreatePrivateRoomPopupEventSchema = {
-  eventType: PopupEventType.CREATE_PRIVATE_ROOM,
-  eventData: {
-    roomName: "room-name-001",
-    roomPassword: "room-password-001",
-  }
-}
-
-htmlForm.addEventListener("submit", (event) => {
-
-  event.preventDefault();
-
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs[0]?.id && htmlForm) {
-      console.log("chrome tabs");
-      chrome.tabs.sendMessage(tabs[0].id, createRoomEvent);
-    }
-  });
-})
+const root = ReactDOM.createRoot(rootContainer);
+root.render(React.createElement(App));

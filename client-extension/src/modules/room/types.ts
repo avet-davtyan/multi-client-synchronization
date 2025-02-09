@@ -6,3 +6,8 @@ export interface ICreatePrivateRoomOptions {
 export interface ICreatePublicRoomOptions {
   name: string;
 }
+
+export interface IJoinPrivateRoomOptions {
+  roomId: string;
+  roomPassword: string;
+}

@@ -5,9 +5,8 @@ export async function mouseClickEvnetListener(event: MouseEvent) {
   const mouseService = MouseClickService.getInstance();
   const socketService = SocketService.getInstance();
 
-  const mouseClickEvent = await mouseService.generateMouseClickEvent(event);
-
-  console.log(mouseClickEvent);
-
-  socketService.sendEvent(mouseClickEvent);
+  if(event.isTrusted === true) {
+    const mouseClickEvent = await mouseService.generateMouseClickEvent(event);
+    socketService.sendEvent(mouseClickEvent);
+  }
 }

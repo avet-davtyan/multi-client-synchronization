@@ -25,12 +25,8 @@ export class MouseService {
     mouseClickEvent: MouseClickEventSchema,
   ) {
 
-    console.log({socketId});
-    console.log("start searching room");
     const room = await this._roomService.getRoomBySocketId(socketId);
     if(room === null) { return; }
-
-    console.log("room found");
 
     const {
       participantSocketIdList,
@@ -40,6 +36,7 @@ export class MouseService {
       await this._socketService.getSocketClientListByIds(participantSocketIdList);
 
     for(const socketClient of socketClientList) {
+      if(socketId === socketClient.id) { continue; }
       const {
         webSocket,
       } = socketClient;

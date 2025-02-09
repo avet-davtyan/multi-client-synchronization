@@ -41,7 +41,7 @@ export class RoomService {
         roomVisibility: roomVisibilityType,
         roomId: randomUUID(),
         adminSocketId: socketId,
-        participantSocketIdList: [],
+        participantSocketIdList: [socketId],
         password: eventData.roomPassword,
       }
 
@@ -52,12 +52,14 @@ export class RoomService {
         roomVisibility: roomVisibilityType,
         roomId: randomUUID(),
         adminSocketId: socketId,
-        participantSocketIdList: [],
+        participantSocketIdList: [socketId],
       }
       room = publicRoom;
     }
 
-    if(room === null) { return; }
+    if(room === null) {
+      throw new Error("unhandled state");
+    }
 
     this._roomContainer.createRoom(room);
 
@@ -69,16 +71,16 @@ export class RoomService {
     roomPassword?: string,
   ) {
     const hasAccessToJoinRoom = await this.hasAccessToJoinRoom(socketId, roomId, roomPassword);
-    if(hasAccessToJoinRoom === false) { return; }
-
-    console.log("joining room");
+    if(hasAccessToJoinRoom === false) {
+      throw new Error("you have no access to room")
+    }
 
     this._roomContainer.addParticipantToRoom(socketId, roomId);
   }
 
   async getRoomBySocketId(
     socketId: string,
-  ): Promise<IRoom | null> {
+  ): Promise<IRoom> {
     const room = await this._roomContainer.getRoomBySocketId(socketId);
 
     return room;
@@ -92,7 +94,6 @@ export class RoomService {
     let hasAccessToJoinRoom = true;
 
     const room = await this._roomContainer.getRoomById(roomId);
-    if(room === null) { return false; }
 
     if(room.roomVisibility === RoomVisibilityType.PRIVATE) {
       if(this.passwordsMatch(roomPassword, room.password) === false) {

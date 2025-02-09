@@ -6,6 +6,7 @@ import {
   PopupEventType,
   PopupEventUnionSchema,
 } from "../../popup-event";
+import { JoinPrivateRoomPopupEventSchema } from "../../popup-event/join-private-room";
 
 export class PopupEventHandler {
 
@@ -30,7 +31,6 @@ export class PopupEventHandler {
   async handlePopupEvent(
     event: unknown,
   ) {
-    console.log("handlePopupEvent")
     let parsedEvent: undefined | PopupEventUnionSchema = undefined;
     try {
       parsedEvent = await PopupEventUnionSchema.parseAsync(event);
@@ -42,6 +42,9 @@ export class PopupEventHandler {
 
     if(parsedEvent.eventType === PopupEventType.CREATE_PRIVATE_ROOM) {
       await this.handleCreateRoomEvent(parsedEvent);
+    }
+    if(parsedEvent.eventType === PopupEventType.JOIN_PRIVATE_ROOM) {
+      await this.handleJoinPrivateRoomEvent(parsedEvent);
     }
   }
 
@@ -59,6 +62,21 @@ export class PopupEventHandler {
       password: roomPassword,
     })
 
+  }
+
+  private async handleJoinPrivateRoomEvent(
+    event: JoinPrivateRoomPopupEventSchema,
+  ) {
+
+    const {
+      roomId,
+      roomPassword,
+    } = event.eventData;
+
+    this._roomService.joinPrivateRoom({
+      roomId,
+      roomPassword,
+    })
   }
 
 }

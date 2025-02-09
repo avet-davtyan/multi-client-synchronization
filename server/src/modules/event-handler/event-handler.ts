@@ -74,22 +74,22 @@ export class EventHandler {
   private async handleJoinRoomEvent(
     socketId: string,
     joinRoomEvent: JoinRoomEventSchema,
-  ) {
+  ): Promise<SuccessOrError> {
     try {
       const {
         eventData,
       } = joinRoomEvent;
 
-      this._roomService.joinToRoom(
+      await this._roomService.joinToRoom(
         socketId,
         eventData.roomId,
         eventData.roomPassword,
       );
     } catch {
-      return errorEvent("can't create room");
+      return errorEvent("can't join to room");
     }
 
-    return successEvent("room successfully created");
+    return successEvent("you successfully joined to room");
   }
 
 }

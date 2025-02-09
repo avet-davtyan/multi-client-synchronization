@@ -1,10 +1,12 @@
 import {
   CreateRoomEventSchema,
   EventType,
+  JoinRoomEventSchema,
   RoomVisibilityType,
 } from "@multi-client-sync/shared";
 import {
   ICreatePrivateRoomOptions,
+  IJoinPrivateRoomOptions,
 } from "./types";
 import { SocketService } from "../socket/socket.service";
 
@@ -43,5 +45,24 @@ export class RoomService {
 
     this.socketService.sendEvent(createPirvateRoomEvent);
 
+  }
+
+  public joinPrivateRoom(
+    options: IJoinPrivateRoomOptions,
+  ) {
+    const {
+      roomId,
+      roomPassword,
+    } = options;
+
+    const joinPrivateRoomEvent: JoinRoomEventSchema = {
+      eventType: EventType.JOIN_ROOM,
+      eventData: {
+        roomId,
+        roomPassword,
+      }
+    };
+
+    this.socketService.sendEvent(joinPrivateRoomEvent);
   }
 }

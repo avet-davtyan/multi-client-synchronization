@@ -5,6 +5,7 @@ import {
 } from "./room";
 import {
   MouseClickEventSchema,
+  MouseMoveEventSchema,
 } from "./mouse";
 import {
   ErrorEventSchema,
@@ -20,6 +21,7 @@ export const EventUnionSchema = z.union([
   CreateRoomEventSchema,
   JoinRoomEventSchema,
   MouseClickEventSchema,
+  MouseMoveEventSchema,
   SuccessEventSchema,
   ErrorEventSchema,
 ]);

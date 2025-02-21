@@ -3,14 +3,24 @@ import {
   EventType,
   SuccessEventSchema,
 } from "@multi-client-sync/shared";
+import {
+  IErrorEventOptions,
+  ISuccessEventOptions,
+} from "./types";
 
 export function successEvent(
-  message?: string
+  options: ISuccessEventOptions,
 ): SuccessEventSchema {
+
+  const {
+    silent,
+    message,
+  } = options;
 
   const successEvent: SuccessEventSchema = {
     eventType: EventType.SUCCESS,
     eventData: {
+      silent,
       message
     }
   };
@@ -19,12 +29,18 @@ export function successEvent(
 }
 
 export function errorEvent(
-  message?: string
+  options: IErrorEventOptions,
 ): ErrorEventSchema {
+
+  const {
+    silent,
+    message,
+  } = options;
 
   const successEvent: ErrorEventSchema = {
     eventType: EventType.ERROR,
     eventData: {
+      silent,
       message
     }
   };

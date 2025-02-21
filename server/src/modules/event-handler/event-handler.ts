@@ -4,6 +4,7 @@ import {
   CreateRoomEventSchema,
   MouseClickEventSchema,
   JoinRoomEventSchema,
+  MouseMoveEventSchema,
 } from "@multi-client-sync/shared";
 import { RoomService } from "../room";
 import { MouseService } from "../mouse/mouse-service";
@@ -33,7 +34,7 @@ export class EventHandler {
   ): Promise<SuccessOrError> {
 
     if(event.eventType === EventType.MOUSE_CLICK) {
-      return this.handeMouseClickEvent(socketId, event);
+      return this.handleMouseClickEvent(socketId, event);
     }
     else if(event.eventType === EventType.CREATE_ROOM) {
       return this.handleCreateRoomEvent(socketId, event);
@@ -41,21 +42,52 @@ export class EventHandler {
     else if(event.eventType === EventType.JOIN_ROOM) {
       return this.handleJoinRoomEvent(socketId, event);
     }
+    else if(event.eventType === EventType.MOUSE_MOVE) {
+      return this.handleMouseMoveEvent(socketId, event);
+    }
 
-    return errorEvent("unknown event");
+    return errorEvent({
+      silent: false,
+      message: "unknown event"
+    });
   }
 
-  private async handeMouseClickEvent(
+  private async handleMouseClickEvent(
     socketId: string,
     mouseClickEvent: MouseClickEventSchema,
   ) {
     try {
       this._mouseService.sendMouseClickEventToRoom(socketId, mouseClickEvent);
     } catch {
-      return errorEvent("can't register mouse click event");
+      return errorEvent({
+        silent: false,
+        message: "can't register mouse click event",
+      });
     }
 
-    return successEvent("mouse click event successfully registered");
+    return successEvent({
+      silent: true,
+      message: "mouse click event successfully registered",
+    });
+  }
+
+  private async handleMouseMoveEvent(
+    socketId: string,
+    mouseMoveEvent: MouseMoveEventSchema,
+  ) {
+    try {
+      this._mouseService.sendMouseMoveEventToRoom(socketId, mouseMoveEvent);
+    } catch {
+      return errorEvent({
+        silent: true,
+        message: "can't register mouse move event",
+      });
+    }
+
+    return successEvent({
+      silent: true,
+      message: "mouse move event successfully registered",
+    });
   }
 
   private async handleCreateRoomEvent(
@@ -65,10 +97,16 @@ export class EventHandler {
     try {
       this._roomService.createRoom(socketId, createRoomEvent);
     } catch {
-      return errorEvent("can't create room");
+      return errorEvent({
+        silent: false,
+        message: "can't create room",
+      });
     }
 
-    return successEvent("room successfully created");
+    return successEvent({
+      silent: false,
+      message: "room successfully created",
+    });
   }
 
   private async handleJoinRoomEvent(
@@ -86,10 +124,16 @@ export class EventHandler {
         eventData.roomPassword,
       );
     } catch {
-      return errorEvent("can't join to room");
+      return errorEvent({
+        silent: false,
+        message: "can't join to room",
+      });
     }
 
-    return successEvent("you successfully joined to room");
+    return successEvent({
+      silent: false,
+      message: "you successfully joined to room",
+    });
   }
 
 }

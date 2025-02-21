@@ -20,6 +20,8 @@ export class RoomContainer {
 
     if(this.roomExists(room.roomId)) { return; }
 
+    console.log({room});
+
     this._rooms.push(room);
   }
 

@@ -2,6 +2,7 @@ import { z } from "zod";
 import { EventType } from "../../event-type";
 
 export const SuccessEventDataSchema = z.object({
+  silent: z.boolean(),
   message: z.string().optional().nullable(),
 });
 

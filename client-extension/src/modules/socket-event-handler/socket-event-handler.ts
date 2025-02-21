@@ -3,6 +3,7 @@ import {
   EventType,
   EventUnionSchema,
   MouseClickEventSchema,
+  MouseMoveEventSchema,
   SuccessEventSchema,
 } from "@multi-client-sync/shared";
 import {
@@ -46,9 +47,16 @@ export class SocketEventHandler {
     if(eventUnion.eventType === EventType.MOUSE_CLICK) {
       this.handleMouseClickEvent(eventUnion);
     }
+    if(eventUnion.eventType === EventType.MOUSE_MOVE) {
+      this.handleMouseMoveEvent(eventUnion);
+    }
   }
 
   private handleSuccessEvent(event: SuccessEventSchema) {
+
+    if(event.eventData.silent === true) {
+      return;
+    }
 
     let toastMsg: undefined | string = undefined;
     if(
@@ -102,6 +110,29 @@ export class SocketEventHandler {
       );
     }
 
+  }
+
+  private handleMouseMoveEvent(event: MouseMoveEventSchema) {
+    const {
+      mousePositionX,
+      mousePositionY,
+    } = event.eventData;
+
+    let customCursor = document.getElementById("custom-cursor") as HTMLDivElement;
+
+    if (!customCursor) {
+      customCursor = document.createElement("div");
+      customCursor.id = "custom-cursor";
+      customCursor.style.position = "fixed";
+      customCursor.style.width = "20px";
+      customCursor.style.height = "20px";
+      customCursor.style.backgroundColor = "red";
+      customCursor.style.borderRadius = "50%";
+      customCursor.style.pointerEvents = "none";
+      customCursor.style.zIndex = "9999";
+      document.body.appendChild(customCursor);
+    }
+    customCursor.style.transform = `translate(${mousePositionX}px, ${mousePositionY}px)`;
   }
 
 }

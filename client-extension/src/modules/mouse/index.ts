@@ -1,1 +1,1 @@
-export * from "./mouse-click.service";
+export * from "./mouse.service";

@@ -1,5 +1,5 @@
 import { RoomService } from "../room";
-import { MouseClickEventSchema } from "@multi-client-sync/shared";
+import { MouseClickEventSchema, MouseMoveEventSchema } from "@multi-client-sync/shared";
 import { SocketService } from "../socket/socket-service";
 
 export class MouseService {
@@ -42,6 +42,30 @@ export class MouseService {
       } = socketClient;
 
       webSocket.send(JSON.stringify(mouseClickEvent));
+    }
+  }
+
+  async sendMouseMoveEventToRoom(
+    socketId: string,
+    mouseMoveEvent: MouseMoveEventSchema,
+  ) {
+    const room = await this._roomService.getRoomBySocketId(socketId);
+    if(room === null) { return; }
+
+    const {
+      participantSocketIdList,
+    } = room;
+
+    const socketClientList =
+      await this._socketService.getSocketClientListByIds(participantSocketIdList);
+
+    for(const socketClient of socketClientList) {
+      if(socketId === socketClient.id) { continue; }
+      const {
+        webSocket,
+      } = socketClient;
+
+      webSocket.send(JSON.stringify(mouseMoveEvent));
     }
   }
 
